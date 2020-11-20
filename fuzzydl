@@ -1,0 +1,58 @@
+#!/bin/zsh
+
+execPath=`realpath $0`
+execPath=${execPath//%\/fuzzydl/}
+
+if [[ -f ${HOME}/.fuzzydl.rc ]]
+then
+    source ${HOME}/.fuzzydl.rc
+else
+    ./fuzzydl_bootstrap.sh
+fi
+
+if [[ -z ${YT_CONFIG_FILE} ]] \
+|| [[ -z ${YT_STORAGE_PATH} ]] \
+|| [[ ${YT_INSTALLED_ZSH}    != "true" ]] \
+|| [[ ${YT_INSTALLED_PYTHON} != "true" ]] \
+|| [[ ${YT_INSTALLED_JQ}     != "true" ]] \
+|| [[ ${YT_INSTALLED_FZF}    != "true" ]] \
+|| [[ ${YT_INSTALLED_YTDL}   != "true" ]]
+then
+    ./fuzzydl_bootstrap.sh
+fi
+
+source ${execPath}/fuzzydl_wizard.sh
+
+
+fuzzyUrlPrompt
+
+if ! [[ -z ${DLURL} ]] \
+&& ! [[ -z ${URL_METADATA} ]]
+then
+    fuzzyFilenamePrompt
+else
+    echo "# No URL provided! Exiting"
+    exit 1
+fi
+
+if ! [[ -z ${DLFILENAME} ]]
+then
+    fuzzyFormatPrompt
+else 
+    echo "# No file name found! Exiting"
+    exit 1
+fi
+
+if ! [[ -z ${DLFORMAT_ID} ]]
+then
+    { 
+        ytdlGet
+    } && {
+        echo "# Video download complete: ${DLFILENAME} #"
+    } || {
+        echo "# Fatal error during execution. Exiting"
+        exit 1
+    }
+else
+    echo "# File format was not found! Exiting"
+fi
