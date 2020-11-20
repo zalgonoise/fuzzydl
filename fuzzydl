@@ -7,7 +7,7 @@ if [[ -f ${HOME}/.fuzzydl.rc ]]
 then
     source ${HOME}/.fuzzydl.rc
 else
-    ./fuzzydl_bootstrap.sh
+    ${execPath}/fuzzydl_bootstrap.sh
 fi
 
 if [[ -z ${YT_CONFIG_FILE} ]] \
@@ -18,7 +18,7 @@ if [[ -z ${YT_CONFIG_FILE} ]] \
 || [[ ${YT_INSTALLED_FZF}    != "true" ]] \
 || [[ ${YT_INSTALLED_YTDL}   != "true" ]]
 then
-    ./fuzzydl_bootstrap.sh
+    ${execPath}/fuzzydl_bootstrap.sh
 fi
 
 source ${execPath}/fuzzydl_wizard.sh
