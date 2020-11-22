@@ -39,7 +39,7 @@ then
         fi
 
 
-        if ! [[ -d ${HOME}/.shortcuts/fuzzydl ]]
+        if ! [[ -f ${HOME}/.shortcuts/fuzzydl ]]
         then
             if ! [[ -d ${HOME}/.shortcuts ]]
             then
@@ -47,6 +47,20 @@ then
             fi
 
             ln -s -f ${binPath}/src/bin/fuzzydl ${HOME}/.shortcuts/fuzzydl
+        fi
+
+        if ! [[ -f ${HOME}/bin/termux-url-opener  ]]
+        then
+            if ! [[ -d ${HOME}/bin ]]
+            then
+                mkdir -p ${HOME}/bin
+            fi
+
+            cat << EOF >> ${HOME}/bin/termux-url-opener
+#!/bin/zsh
+
+fuzzydl -a -l ${1}
+EOF
         fi
 
 
