@@ -1,8 +1,12 @@
 #!/bin/bash
 
-if ! [[ -f ${HOME}/.fuzzydl.rc ]]
+set -x
+
+YT_CONFIG_FILE="${HOME}/.fuzzydl.rc"
+
+
+if ! [[ -f ${YT_CONFIG_FILE} ]]
 then
-    YT_CONFIG_FILE=${HOME}/.fuzzydl.rc
     cat << EOF >> ${HOME}/.fuzzydl.rc
 # FuzzyDl default configuration
 YT_CONFIG_FILE=\${HOME}/.fuzzydl.rc
@@ -18,23 +22,27 @@ then
     || [[ `which fuzzydl` == "fuzzydl not found" ]]
     then
         binPath=`realpath $0`
-        binPath=${binPath//%\/src\/lib\/fuzzydl_bootstrap.sh/}
+        binPath=${binPath//\/src\/lib\/fuzzydl_bootstrap.sh/}
         
         if ! [[ -d ${HOME}/.local/fuzzydl ]]
         then 
-            mkdir -p ${HOME}/.local/fuzzydl
+            mkdir -p ${HOME}/.local
+            ln -s -f -d ${binPath} ${HOME}/.local/fuzzydl
         fi
 
-        ln -s -f ${binPath} ${HOME}/.local/fuzzydl
 
-        export PATH=${PATH}:${HOME}/.local/fuzzydl/src/bin
+        if ! [[ ${PATH} =~ "fuzzydl/src/bin" ]]
+        then
+            export PATH=${PATH}:${HOME}/.local/fuzzydl/src/bin
 
-        echo "PATH=\${PATH}:\${HOME}/.local/fuzzydl/src/bin" >> ${PREFIX}/etc/profile
-        
+            echo "PATH=\${PATH}:\${HOME}/.local/fuzzydl/src/bin" >> ${PREFIX}/etc/profile
+        fi
+
     fi
 
 
-    if ! [[ -d ${HOME}/storage ]]
+    if ! [[ -d ${HOME}/storage ]] \
+    && ! [[ `whoami` == "system" ]]
     then
         termux-setup-storage
     fi
@@ -112,3 +120,4 @@ else
 
 fi
 
+login

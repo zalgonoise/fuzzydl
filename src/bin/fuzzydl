@@ -60,7 +60,8 @@ then
 elif ! [[ -z ${DLURL} ]] \
     && [[ -z ${URL_METADATA} ]]
 then
-    export URL_METADATA=$(youtube-dl --dump-json ${DLURL} | jq -c ) 
+    export URL_METADATA=`mktemp` \
+        && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
 else
 
     echo "# No URL provided! Exiting"
@@ -74,7 +75,7 @@ elif [[ ${DL_AUTOMATED} == "true" ]] \
 && [[ -z ${DLFILENAME} ]] \
 && ! [[ -z ${URL_METADATA} ]]
 then
-    export DLFILENAME=$(echo ${URL_METADATA} | jq -r '.title')
+    export DLFILENAME=$(cat ${URL_METADATA} | jq -r '.title')
 else
     echo "# No file name found! Exiting"
     exit 1
