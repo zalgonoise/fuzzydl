@@ -61,6 +61,9 @@ then
 
 fuzzydl -a -l ${1}
 EOF
+
+            chmod +x ${HOME}/bin/termux-url-opener
+
         fi
 
 
