@@ -54,6 +54,12 @@ then
                 cd ${curPath}
                 exit 0
                 ;;
+            -l|--link)
+                if ! [[ "${_input[$((${a}+1))]}" =~ ^[-].* ]] \
+                && [[ ${a} < ${#_input[@]} ]]
+                then
+                    DLURL="${(Q)_input[$((${a}+1))]}"
+                fi
         esac
     done
 fi
