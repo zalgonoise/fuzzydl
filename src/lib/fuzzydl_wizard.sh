@@ -1,7 +1,9 @@
 #!/bin/zsh
 
 fuzzyUrlPrompt() {
-    fzf \
+    echo "" \
+    | fzf \
+    --print-query \
     --bind "change:top" \
     --layout=reverse-list \
     --prompt="~ " \
@@ -9,13 +11,18 @@ fuzzyUrlPrompt() {
     --header="# Please enter your YouTube link: #" \
     --color=dark \
     --black \
-    | read -r ${DLURL} \
-    && export DLURL \
-    && export URL_METADATA=$(youtube-dl --dump-json ${DLURL} | jq -c)
+    | read -r DLURL
+    
+    if ! [[ -z ${DLURL} ]]
+    then
+        export DLURL \
+        && export URL_METADATA=$(youtube-dl --dump-json ${DLURL} | jq -c)
+    fi
 }
 
 fuzzyFilenamePrompt() {
-    fzf \
+    echo "" \
+    | fzf \
     --bind "change:top" \
     --preview \
         "{  
@@ -29,6 +36,7 @@ fuzzyFilenamePrompt() {
     --header="# Please enter a file name: #" \
     --color=dark \
     --black \
+    --print-query \
     | read -r ${DLFILENAME}
     
     if [[ -z ${DLFILENAME} ]]

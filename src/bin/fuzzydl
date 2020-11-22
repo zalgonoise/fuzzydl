@@ -1,13 +1,17 @@
 #!/bin/zsh
 
+curPath=`pwd`
 execPath=`realpath $0`
 execPath=${execPath//%\/bin\/fuzzydl/}
+
+#cd ${execPath}
+
 
 if [[ -f ${HOME}/.fuzzydl.rc ]]
 then
     source ${HOME}/.fuzzydl.rc
 else
-    ${execPath}/lib/fuzzydl_bootstrap.sh
+    bash ${execPath}/lib/fuzzydl_bootstrap.sh
 fi
 
 if [[ -z ${YT_CONFIG_FILE} ]] \
@@ -18,7 +22,7 @@ if [[ -z ${YT_CONFIG_FILE} ]] \
 || [[ ${YT_INSTALLED_FZF}    != "true" ]] \
 || [[ ${YT_INSTALLED_YTDL}   != "true" ]]
 then
-    ${execPath}/lib/fuzzydl_bootstrap.sh
+    bash ${execPath}/lib/fuzzydl_bootstrap.sh
 fi
 
 source ${execPath}/lib/fuzzydl_wizard.sh

@@ -1,4 +1,3 @@
-fuzzydl_bootstrap.sh
 #!/bin/bash
 
 if ! [[ -f ${HOME}/.fuzzydl.rc ]]
@@ -42,7 +41,8 @@ else
     fi
 fi
 
-if [[ -z `which zsh` ]]
+if [[ -z `which zsh` ]] \
+|| [[ `which zsh` == "zsh not found" ]]
 then
     apt-get update
     apt-get install -y zsh
@@ -51,7 +51,8 @@ else
     echo "YT_INSTALLED_ZSH=true" >> ${YT_CONFIG_FILE}
 fi
 
-if [[ -z `which python` ]]
+if [[ -z `which python` ]] \
+|| [[ `which python` == "python not found" ]]
 then
     apt-get update
     apt-get install -y python
@@ -60,7 +61,8 @@ else
     echo "YT_INSTALLED_PYTHON=true" >> ${YT_CONFIG_FILE}
 fi
 
-if [[ -z `which jq` ]]
+if [[ -z `which jq` ]] \
+|| [[ `which jq` == "jq not found" ]]
 then
     apt-get update
     apt-get install -y jq
@@ -69,7 +71,8 @@ else
     echo "YT_INSTALLED_JQ=true" >> ${YT_CONFIG_FILE}
 fi
 
-if [[ -z `which fzf` ]]
+if [[ -z `which fzf` ]] \
+|| [[ `which fzf` == "fzf not found" ]]
 then
     apt-get update
     apt-get install -y fzf
@@ -78,10 +81,12 @@ else
     echo "YT_INSTALLED_FZF=true" >> ${YT_CONFIG_FILE}
 fi
 
-if [[ -z `which youtube-dl` ]]
+if [[ -z `which youtube-dl` ]] \
+|| [[ `which youtube-dl` == "youtube-dl not found" ]]
 then
-    pip install --upgrade youtube-dl
-    echo "YT_INSTALLED_YTDL=true" >> ${YT_CONFIG_FILE}
+    pip install --upgrade pip \
+    && pip install --upgrade youtube-dl \
+    && echo "YT_INSTALLED_YTDL=true" >> ${YT_CONFIG_FILE}
 else 
     echo "YT_INSTALLED_YTDL=true" >> ${YT_CONFIG_FILE}
 
