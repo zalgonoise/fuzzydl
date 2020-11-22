@@ -59,7 +59,7 @@ then
             cat << EOF >> ${HOME}/bin/termux-url-opener
 #!/bin/zsh
 
-fuzzydl -a -l \${1}
+zsh \${HOME}/.local/fuzzydl/src/bin/fuzzydl -a -l \${1}
 EOF
 
             chmod +x ${HOME}/bin/termux-url-opener
