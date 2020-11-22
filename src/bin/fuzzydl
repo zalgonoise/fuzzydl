@@ -17,6 +17,7 @@ fi
 if [[ -z ${YT_CONFIG_FILE} ]] \
 || [[ -z ${YT_STORAGE_PATH} ]] \
 || [[ ${YT_INSTALLED_ZSH}    != "true" ]] \
+|| [[ ${YT_INSTALLED_FFMPEG} != "true" ]] \
 || [[ ${YT_INSTALLED_PYTHON} != "true" ]] \
 || [[ ${YT_INSTALLED_JQ}     != "true" ]] \
 || [[ ${YT_INSTALLED_FZF}    != "true" ]] \

@@ -79,6 +79,16 @@ else
     echo "YT_INSTALLED_ZSH=true" >> ${YT_CONFIG_FILE}
 fi
 
+if [[ -z `which ffmpeg` ]] \
+|| [[ `which ffmpeg` == "ffmpeg not found" ]]
+then
+    apt-get update
+    apt-get install -y ffmpeg
+    echo "YT_INSTALLED_FFMPEG=true" >> ${YT_CONFIG_FILE}
+else 
+    echo "YT_INSTALLED_FFMPEG=true" >> ${YT_CONFIG_FILE}
+fi
+
 if [[ -z `which python` ]] \
 || [[ `which python` == "python not found" ]]
 then
