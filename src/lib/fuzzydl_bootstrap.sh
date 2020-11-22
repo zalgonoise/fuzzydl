@@ -14,6 +14,26 @@ if ! [[ -z `which termux-info` ]]
 then
     termuxAppCheck=1
 
+    if [[ -z `which fuzzydl` ]] \
+    || [[ `which fuzzydl` == "fuzzydl not found" ]]
+    then
+        binPath=`realpath $0`
+        binPath=${binPath//%\/src\/lib\/fuzzydl_bootstrap.sh/}
+        
+        if ! [[ -d ${HOME}/.local/fuzzydl ]]
+        then 
+            mkdir -p ${HOME}/.local/fuzzydl
+        fi
+
+        ln -s -f ${binPath} ${HOME}/.local/fuzzydl
+
+        export PATH=${PATH}:${HOME}/.local/fuzzydl/src/bin
+
+        echo "PATH=\${PATH}:\${HOME}/.local/fuzzydl/src/bin" >> ${PREFIX}/etc/profile
+        
+    fi
+
+
     if ! [[ -d ${HOME}/storage ]]
     then
         termux-setup-storage
