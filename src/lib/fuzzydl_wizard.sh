@@ -11,7 +11,7 @@ fuzzyUrlPrompt() {
     --black \
     | read -r ${DLURL} \
     && export DLURL \
-    && export URL_METADATA=$(youtube-dl --dump-json ${DLURL})
+    && export URL_METADATA=$(youtube-dl --dump-json ${DLURL} | jq -c)
 }
 
 fuzzyFilenamePrompt() {
