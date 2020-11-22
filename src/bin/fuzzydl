@@ -47,6 +47,12 @@ then
                     DLFILENAME="${(Q)_input[$((${a}+1))]}"
                 fi
                 ;;
+            -u|--update)
+                cd ${execPath}
+                git fetch && git pull --ff-only
+                cd ${curPath}
+                exit 0
+                ;;
         esac
     done
 fi
@@ -84,7 +90,7 @@ fi
 if [[ ${DL_AUTOMATED} == "true" ]] \
 && [[ -z ${DLFORMAT_ID} ]]
 then
-    DLFORMAT_ID="bestvideo,bestaudio"
+    DLFORMAT_ID="bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
 fi
 
 if ! [[ -z ${DLFORMAT_ID} ]]

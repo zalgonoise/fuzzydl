@@ -84,5 +84,5 @@ worstaudio" \
 }
 
 ytdlGet() {
-    youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" ${AUDIO_OPTS} -o "${YT_STORAGE_PATH}/${DLFILENAME}" "${DLURL}"
+    youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" ${AUDIO_OPTS} -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}"
 }
