@@ -75,7 +75,7 @@ worstaudio" \
 
     if [[ `echo ${DLFORMAT} | awk '{print $3}'` == "audio" ]]
     then
-        export AUDIO_OPTS="-x --audio-format `echo ${DLFORMAT} | awk '{print $2}'`"
+        export AUDIO_OPTS="`echo ${DLFORMAT} | awk '{print $2}'`"
     fi
 
     export DLFORMAT_ID=`echo ${DLFORMAT} | awk '{print $1}'`
@@ -84,5 +84,10 @@ worstaudio" \
 }
 
 ytdlGet() {
-    youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" ${AUDIO_OPTS} -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}"
+    if [[ -z ${AUDIO_OPTS} ]]
+    then
+        youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}"
+    else
+        youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -x --audio-format "${AUDIO_OPTS}" -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}" 
+    fi
 }

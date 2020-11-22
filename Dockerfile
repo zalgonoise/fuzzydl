@@ -13,5 +13,3 @@ RUN login && apt-get update -y && apt-get upgrade -y && apt-get install -y zsh &
 ENV SHELL=/bin/zsh
 
 ENTRYPOINT [ "/data/data/com.termux/files/usr/bin/login", "fuzzydl/src/lib/fuzzydl_bootstrap.sh" ]
-
-CMD [ "login" ]

@@ -120,4 +120,5 @@ else
 
 fi
 
-login
+fuzzydl
+exit 0
