@@ -91,3 +91,15 @@ ytdlGet() {
         youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -x --audio-format "${AUDIO_OPTS}" -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}" 
     fi
 }
+
+cleanUpAfterYourself() {
+    if [[ -f ${URL_METADATA} ]]
+    then
+        rm -rf ${URL_METADATA}
+    fi
+
+    unset YT_CONFIG_FILE YT_INSTALLED_FFMPEG YT_INSTALLED_FZF YT_INSTALLED_JQ \
+    YT_INSTALLED_PYTHON YT_INSTALLED_YTDL YT_INSTALLED_ZSH YT_STORAGE_PATH \
+    curPath execPath _input \
+    DL_AUTOMATED DLFILENAME DLURL URL_METADATA DLFORMAT_ID AUDIO_OPTS
+}

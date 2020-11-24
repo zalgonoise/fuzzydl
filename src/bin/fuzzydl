@@ -47,8 +47,10 @@ then
                 ;;
             -u|--update)
                 cd ${execPath}/..
-                git fetch && git pull --ff-only
+                git fetch \
+                && git pull --ff-only
                 cd ${curPath}
+                cleanUpAfterYourself
                 exit 0
                 ;;
             -l|--link)
@@ -56,6 +58,8 @@ then
                 && [[ ${a} < ${#_input[@]} ]]
                 then
                     DLURL="${(Q)_input[$((${a}+1))]}"
+                    export URL_METADATA=`mktemp` \
+                    && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
                 fi
                 ;;
             -x|--audio)
@@ -76,12 +80,6 @@ if ! [[ -z ${DLURL} ]] \
 then
     fuzzyFilenamePrompt
 elif ! [[ -z ${DLURL} ]] \
-    && [[ -z ${URL_METADATA} ]]
-then
-    export URL_METADATA=`mktemp` \
-        && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
-
-elif ! [[ -z ${DLURL} ]] \
 && [[ "${DL_AUTOMATED}" == "true" ]]
 then
     if [[ -z ${URL_METADATA} ]]
@@ -91,6 +89,7 @@ then
     fi
 else
     echo "# No URL provided! Exiting"
+    cleanUpAfterYourself
     exit 1
 fi
 
@@ -104,12 +103,13 @@ then
     export DLFILENAME=$(cat ${URL_METADATA} | jq -r '.title')
 else
     echo "# No file name found! Exiting"
+    cleanUpAfterYourself
     exit 1
 fi
 
 if [[ ${DL_AUTOMATED} == "true" ]] \
 && [[ -z ${DLFORMAT_ID} ]] \
-&& ! [[ -z ${AUDIO_OPTS} ]]
+&& [[ -z ${AUDIO_OPTS} ]]
 then
     DLFORMAT_ID="bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
 fi
@@ -120,10 +120,14 @@ then
         ytdlGet
     } && {
         echo "# Video download complete: ${DLFILENAME} #"
+        cleanUpAfterYourself
     } || {
         echo "# Fatal error during execution. Exiting"
+        cleanUpAfterYourself
         exit 1
     }
 else
     echo "# File format was not found! Exiting"
+    cleanUpAfterYourself
+    exit 1
 fi
