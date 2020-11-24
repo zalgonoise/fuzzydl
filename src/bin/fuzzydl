@@ -49,7 +49,7 @@ then
                 fi
                 ;;
             -u|--update)
-                cd ${execPath}
+                cd ${execPath}/..
                 git fetch && git pull --ff-only
                 cd ${curPath}
                 exit 0
