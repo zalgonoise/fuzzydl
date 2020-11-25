@@ -23,9 +23,9 @@ then
     then
         binPath=`realpath $0`
         binPath=${binPath//\/src\/lib\/fuzzydl_bootstrap.sh/}
-        
+
         if ! [[ -d ${HOME}/.local/fuzzydl ]]
-        then 
+        then
             mkdir -p ${HOME}/.local
             ln -s -f -d ${binPath} ${HOME}/.local/fuzzydl
         fi
@@ -38,6 +38,36 @@ then
             echo "PATH=\${PATH}:\${HOME}/.local/fuzzydl/src/bin" >> ${PREFIX}/etc/profile
         fi
 
+
+        if ! [[ -f ${HOME}/.shortcuts/fuzzydl ]]
+        then
+            if ! [[ -d ${HOME}/.shortcuts ]]
+            then
+                mkdir -p ${HOME}/.shortcuts
+            fi
+
+            ln -s -f ${binPath}/src/bin/fuzzydl ${HOME}/.shortcuts/fuzzydl
+        fi
+
+        if ! [[ -f ${HOME}/bin/termux-url-opener  ]]
+        then
+            if ! [[ -d ${HOME}/bin ]]
+            then
+                mkdir -p ${HOME}/bin
+            fi
+
+            cat << EOF >> ${HOME}/bin/termux-url-opener
+#!/bin/zsh
+
+zsh \${HOME}/.local/fuzzydl/src/bin/fuzzydl -a -l \${1}
+EOF
+
+            chmod +x ${HOME}/bin/termux-url-opener
+
+        fi
+
+
+
     fi
 
 
@@ -49,7 +79,7 @@ then
 
     if ! [[ -d ${HOME}/storage/shared/YouTube ]]
     then
-        mkdir -p ${HOME}/storage/shared/YouTube 
+        mkdir -p ${HOME}/storage/shared/YouTube
         echo "YT_STORAGE_PATH=\${HOME}/storage/shared/YouTube" >> ${YT_CONFIG_FILE}
     elif [[ -d ${HOME}/storage/shared/YouTube ]] \
     && ! [[ `grep 'YT_STORAGE_PATH' ${YT_CONFIG_FILE}` ]]
@@ -75,7 +105,7 @@ then
     apt-get update
     apt-get install -y zsh
     echo "YT_INSTALLED_ZSH=true" >> ${YT_CONFIG_FILE}
-else 
+else
     echo "YT_INSTALLED_ZSH=true" >> ${YT_CONFIG_FILE}
 fi
 
@@ -85,7 +115,7 @@ then
     apt-get update
     apt-get install -y ffmpeg
     echo "YT_INSTALLED_FFMPEG=true" >> ${YT_CONFIG_FILE}
-else 
+else
     echo "YT_INSTALLED_FFMPEG=true" >> ${YT_CONFIG_FILE}
 fi
 
@@ -95,7 +125,7 @@ then
     apt-get update
     apt-get install -y python
     echo "YT_INSTALLED_PYTHON=true" >> ${YT_CONFIG_FILE}
-else 
+else
     echo "YT_INSTALLED_PYTHON=true" >> ${YT_CONFIG_FILE}
 fi
 
@@ -105,7 +135,7 @@ then
     apt-get update
     apt-get install -y jq
     echo "YT_INSTALLED_JQ=true" >> ${YT_CONFIG_FILE}
-else 
+else
     echo "YT_INSTALLED_JQ=true" >> ${YT_CONFIG_FILE}
 fi
 
@@ -115,7 +145,7 @@ then
     apt-get update
     apt-get install -y fzf
     echo "YT_INSTALLED_FZF=true" >> ${YT_CONFIG_FILE}
-else 
+else
     echo "YT_INSTALLED_FZF=true" >> ${YT_CONFIG_FILE}
 fi
 
@@ -125,7 +155,7 @@ then
     pip install --upgrade pip \
     && pip install --upgrade youtube-dl \
     && echo "YT_INSTALLED_YTDL=true" >> ${YT_CONFIG_FILE}
-else 
+else
     echo "YT_INSTALLED_YTDL=true" >> ${YT_CONFIG_FILE}
 
 fi

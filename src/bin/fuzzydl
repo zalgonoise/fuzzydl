@@ -4,9 +4,6 @@ curPath=`pwd`
 execPath=`realpath $0`
 execPath=${execPath//%\/bin\/fuzzydl/}
 
-#cd ${execPath}
-
-
 if [[ -f ${HOME}/.fuzzydl.rc ]]
 then
     source ${HOME}/.fuzzydl.rc
@@ -38,7 +35,7 @@ then
     
         case ${(Q)_input[a]} in
 
-            "-a"|"--auto")
+            -a|--auto)
                 DL_AUTOMATED=true
                 ;;
             -o|--output|--outfile)
@@ -49,29 +46,50 @@ then
                 fi
                 ;;
             -u|--update)
-                cd ${execPath}
-                git fetch && git pull --ff-only
+                cd ${execPath}/..
+                git fetch \
+                && git pull --ff-only
                 cd ${curPath}
+                cleanUpAfterYourself
                 exit 0
+                ;;
+            -l|--link)
+                if ! [[ "${_input[$((${a}+1))]}" =~ ^[-].* ]] \
+                && [[ ${a} < ${#_input[@]} ]]
+                then
+                    DLURL="${(Q)_input[$((${a}+1))]}"
+                    export URL_METADATA=`mktemp` \
+                    && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
+                fi
+                ;;
+            -x|--audio)
+                export DLFORMAT_ID="bestaudio[ext=m4a]/bestaudio"
+                export AUDIO_OPTS="mp3"
                 ;;
         esac
     done
 fi
 
+if [[ -z ${DLURL} ]]
+then 
+    fuzzyUrlPrompt
+fi
 
-fuzzyUrlPrompt
-
-if ! [[ -z ${DLURL} ]]
+if ! [[ -z ${DLURL} ]] \
+&& ! [[ "${DL_AUTOMATED}" == "true" ]]
 then
     fuzzyFilenamePrompt
 elif ! [[ -z ${DLURL} ]] \
-    && [[ -z ${URL_METADATA} ]]
+&& [[ "${DL_AUTOMATED}" == "true" ]]
 then
-    export URL_METADATA=`mktemp` \
-        && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
+    if [[ -z ${URL_METADATA} ]]
+    then
+        export URL_METADATA=`mktemp` \
+            && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
+    fi
 else
-
     echo "# No URL provided! Exiting"
+    cleanUpAfterYourself
     exit 1
 fi
 
@@ -85,11 +103,13 @@ then
     export DLFILENAME=$(cat ${URL_METADATA} | jq -r '.title')
 else
     echo "# No file name found! Exiting"
+    cleanUpAfterYourself
     exit 1
 fi
 
 if [[ ${DL_AUTOMATED} == "true" ]] \
-&& [[ -z ${DLFORMAT_ID} ]]
+&& [[ -z ${DLFORMAT_ID} ]] \
+&& [[ -z ${AUDIO_OPTS} ]]
 then
     DLFORMAT_ID="bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/best"
 fi
@@ -100,10 +120,14 @@ then
         ytdlGet
     } && {
         echo "# Video download complete: ${DLFILENAME} #"
+        cleanUpAfterYourself
     } || {
         echo "# Fatal error during execution. Exiting"
+        cleanUpAfterYourself
         exit 1
     }
 else
     echo "# File format was not found! Exiting"
+    cleanUpAfterYourself
+    exit 1
 fi
