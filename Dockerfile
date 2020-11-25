@@ -8,7 +8,7 @@ RUN echo -e "\n\n# YouTube DNS resolution:\n\nyoutube.com\nyoutube-ui.l.google.c
     >> /system/etc/static-dns-hosts.txt
 RUN /system/bin/update-static-dns
 
-RUN login && apt-get update -y && apt-get upgrade -y && apt-get install -y zsh && chsh ${user} -s zsh
+RUN login && apt-get update -y && apt-get upgrade -y && apt-get install -y zsh && chsh ${USER} -s zsh
 
 ENV SHELL=/bin/zsh
 
