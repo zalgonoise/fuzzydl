@@ -8,7 +8,11 @@ if [[ -f ${HOME}/.fuzzydl.rc ]]
 then
     source ${HOME}/.fuzzydl.rc
 else
-    bash ${execPath}/lib/fuzzydl_bootstrap.sh
+    if [[ -z `which termux-info` ]] \
+    || [[ `which termux-info` == "termux-info not found" ]]
+    then
+        bash ${execPath}/lib/fuzzydl_bootstrap_termux.sh
+    fi
 fi
 
 if [[ -z ${YT_CONFIG_FILE} ]] \
@@ -20,7 +24,11 @@ if [[ -z ${YT_CONFIG_FILE} ]] \
 || [[ ${YT_INSTALLED_FZF}    != "true" ]] \
 || [[ ${YT_INSTALLED_YTDL}   != "true" ]]
 then
-    bash ${execPath}/lib/fuzzydl_bootstrap.sh
+    if [[ -z `which termux-info` ]] \
+    || [[ `which termux-info` == "termux-info not found" ]]
+    then
+        bash ${execPath}/lib/fuzzydl_bootstrap_termux.sh
+    fi
 fi
 
 source ${execPath}/lib/fuzzydl_wizard.sh
