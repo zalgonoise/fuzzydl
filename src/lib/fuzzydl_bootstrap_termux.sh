@@ -69,7 +69,8 @@ then
     termux-setup-storage
 fi
 
-if ! [[ -d ${HOME}/storage/shared/YouTube ]]
+if ! [[ -d ${HOME}/storage/shared/YouTube ]] \
+|| ! [[ -d ${HOME}/YouTube ]]
 then
     mkdir -p ${HOME}/storage/shared/YouTube
     mkdir -p ${HOME}/YouTube
