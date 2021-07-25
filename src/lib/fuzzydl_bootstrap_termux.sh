@@ -80,7 +80,8 @@ then
 elif [[ -d ${HOME}/storage/shared/YouTube ]] \
 && ! [[ `grep 'YT_STORAGE_PATH' ${YT_CONFIG_FILE}` ]]
 then
-    echo "YT_STORAGE_PATH=\${HOME}/YouTube" >> ${YT_CONFIG_FILE}
+    echo "YT_STORAGE_PATH=\${HOME}/storage/shared/YouTube" >> ${YT_CONFIG_FILE}
+    echo "YT_STORAGE_PATH_INTERNAL=\${HOME}/YouTube" >> ${YT_CONFIG_FILE}
 fi
 
 
