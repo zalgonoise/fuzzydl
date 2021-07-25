@@ -12,12 +12,12 @@ fuzzyUrlPrompt() {
     --color=dark \
     --black \
     | read -r DLURL
-    
+
     if ! [[ -z ${DLURL} ]]
     then
         export DLURL \
         && URL_METADATA=`mktemp` \
-        && youtube-dl --dump-json ${DLURL} | jq -c > ${URL_METADATA}
+        && youtube-dl --no-check-certificate --dump-json ${DLURL} | jq -c > ${URL_METADATA}
     fi
 }
 
@@ -31,7 +31,7 @@ fuzzyFilenamePrompt() {
     | fzf \
     --bind "change:top" \
     --preview \
-        "{  
+        "{
             echo 'Video Title: ${(Q)metaTitle}'
             echo 'Video Uploader: ${(Q)metaUploader}'
             echo -e '\nVideo Description:\n#####\n' ; cat <( echo ${metaDesc} ) ; echo -e '\n#####'
@@ -45,7 +45,7 @@ fuzzyFilenamePrompt() {
     --query=${(Q)metaTitle} \
     --print-query \
     | read -r DLFILENAME
-    
+
     if [[ -z ${DLFILENAME} ]] \
     && ! [[ -z ${metaTitle} ]]
     then
@@ -56,7 +56,7 @@ fuzzyFilenamePrompt() {
 }
 
 fuzzyFormatPrompt() {
-    echo "$(youtube-dl -F ${DLURL} | tail +4)
+    echo "$(youtube-dl  --no-check-certificate -F ${DLURL} | tail +4)
 best
 worst
 bestvideo
@@ -86,9 +86,11 @@ worstaudio" \
 ytdlGet() {
     if [[ -z ${AUDIO_OPTS} ]]
     then
-        youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}"
+        youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -o "${YT_STORAGE_PATH_INTERNAL}/${DLFILENAME}.%(ext)s" "${DLURL}"
+        mv "${YT_STORAGE_PATH_INTERNAL}/.*  "${YT_STORAGE_PATH}/.
     else
-        youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -x --audio-format "${AUDIO_OPTS}" -o "${YT_STORAGE_PATH}/${DLFILENAME}.%(ext)s" "${DLURL}" 
+        youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -x --audio-format "${AUDIO_OPTS}" -o "${YT_STORAGE_PATH_INTERNAL}/${DLFILENAME}.%(ext)s" "${DLURL}"
+        mv "${YT_STORAGE_PATH_INTERNAL}/.*  "${YT_STORAGE_PATH}/.
     fi
 }
 

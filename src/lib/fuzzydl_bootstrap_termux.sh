@@ -72,11 +72,14 @@ fi
 if ! [[ -d ${HOME}/storage/shared/YouTube ]]
 then
     mkdir -p ${HOME}/storage/shared/YouTube
+    mkdir -p ${HOME}/YouTube
     echo "YT_STORAGE_PATH=\${HOME}/storage/shared/YouTube" >> ${YT_CONFIG_FILE}
+    echo "YT_STORAGE_PATH_INTERNAL=\${HOME}/YouTube" >> ${YT_CONFIG_FILE}
+
 elif [[ -d ${HOME}/storage/shared/YouTube ]] \
 && ! [[ `grep 'YT_STORAGE_PATH' ${YT_CONFIG_FILE}` ]]
 then
-    echo "YT_STORAGE_PATH=\${HOME}/storage/shared/YouTube" >> ${YT_CONFIG_FILE}
+    echo "YT_STORAGE_PATH=\${HOME}/YouTube" >> ${YT_CONFIG_FILE}
 fi
 
 
