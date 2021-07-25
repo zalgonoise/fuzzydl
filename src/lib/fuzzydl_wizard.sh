@@ -87,10 +87,12 @@ ytdlGet() {
     if [[ -z ${AUDIO_OPTS} ]]
     then
         youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -o "${YT_STORAGE_PATH_INTERNAL}/${DLFILENAME}.%(ext)s" "${DLURL}"
-        mv ${YT_STORAGE_PATH_INTERNAL}/*  ${YT_STORAGE_PATH}/.
+        cp -r ${YT_STORAGE_PATH_INTERNAL}/*  ${YT_STORAGE_PATH}
+        rm -rf ${YT_STORAGE_PATH_INTERNAL}/*
     else
         youtube-dl --no-check-certificate -f "${DLFORMAT_ID}" -x --audio-format "${AUDIO_OPTS}" -o "${YT_STORAGE_PATH_INTERNAL}/${DLFILENAME}.%(ext)s" "${DLURL}"
-        mv ${YT_STORAGE_PATH_INTERNAL}/* ${YT_STORAGE_PATH}/.
+        cp -r ${YT_STORAGE_PATH_INTERNAL}/* ${YT_STORAGE_PATH}
+        rm -rf ${YT_STORAGE_PATH_INTERNAL}/*
     fi
 }
 
